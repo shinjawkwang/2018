@@ -1,0 +1,20 @@
+# Mac OSX
+.DS_Store
+
+# c, cpp out file
+*.out
+
+#Document Files
+*.docx
+*.key
+*.hwp
+*.pptx
+*.pdf
+
+#test, temp Files
+test.c
+test.cpp
+test.py
+temp.c
+temp.cpp
+temp.py

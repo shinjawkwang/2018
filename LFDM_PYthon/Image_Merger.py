@@ -37,7 +37,7 @@ def ConvertColor(files, target_dir):
 def CalcRowLevel(files):
     for file in files:
         img = cv2.imread(file)
-        
+
 
 def main():
     print("# Welcome to Everytime Schedule MAkEr")

@@ -2,9 +2,20 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="91f7fee6-651b-48fc-9103-7e9c2d6212b0" name="Default" comment="">
+      <change beforePath="" afterPath="$PROJECT_DIR$/.idea/LFDM_PYthon.iml" />
       <change beforePath="" afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" />
       <change beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/R_User_Library.xml" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/.idea/misc.xml" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/.idea/modules.xml" />
       <change beforePath="" afterPath="$PROJECT_DIR$/.idea/vcs.xml" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/Images/Resize/0_rs.jpg" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/Images/Resize/1_rs.jpg" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/Images/Resize/2_rs.jpg" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/Images/Resize/3_rs.jpg" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/Images/Resize/4_rs.jpg" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/Images/Resize/5_rs.jpg" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/Images/Resize/6_rs.jpg" />
       <change beforePath="$PROJECT_DIR$/Image_Merger.py" afterPath="$PROJECT_DIR$/Image_Merger.py" />
       <change beforePath="$PROJECT_DIR$/Images/1.jpg" afterPath="$PROJECT_DIR$/Images/1.jpg" />
     </list>

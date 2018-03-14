@@ -1,29 +1,26 @@
 import java.util.Scanner;
 
 public class Converter {
-	public String toBinary(int num) {
-		String binary;
+	public static void main(String args[]) {
 		
-		
-		return binary;
-	}
-	public String toOctal(int num) {
-		String octal;
-		
-		return octal;
-	}
-	public String toHexa(int num) {
-		String hexa;
-		
-		return hexa;
-	}
-	
-	public static void main(String argc[]) {
+		/* Variables - one integer and 3 String for convert */
 		int num;
-		Scanner inptnum = new Scanner(System.in);
-		System.out.println("Input decimal number: ");
-		num = inptnum.nextInt();
-		System.out.print(num);
+		String Binary, Octal, Hexa;
+		
+		/* Keyboard input */
+		Scanner inpt = new Scanner(System.in);
+		System.out.print("Input decimal number: ");
+		num = inpt.nextInt();
+		
+		/* Converting */
+		Binary = Integer.toBinaryString(num);
+		Octal = Integer.toOctalString(num);
+		Hexa = Integer.toHexString(num);
+		
+		/* Print output */
+		System.out.println("Binary number: " + Binary);
+		System.out.println("Octal number: " + Octal);
+		System.out.println("Hexadecimal number: " + Hexa);
 	}
 	
 }

@@ -1,6 +1,12 @@
 import java.util.Scanner;
 
 public class Converter {
+	public String soBinary(int num) {
+		String binary;
+		
+		return binary;
+	}
+	
 	public static void main(String args[]) {
 		
 		/* Variables - one integer and 3 String for convert */

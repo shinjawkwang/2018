@@ -1,7 +1,7 @@
 	.file	"sum.c"
 	.section	.rodata.str1.1,"aMS",@progbits,1
 .LC0:
-	.string	"\nsum is %d\n"
+	.string	"sum is %d\n"
 	.text
 	.globl	main
 	.type	main, @function

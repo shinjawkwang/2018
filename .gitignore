@@ -22,3 +22,6 @@ temp.py
 # Matlab Drive Appdata
 .MATLABDriveAppData/
 Icon?
+
+# Image Data
+*.jpg

@@ -8,6 +8,7 @@ __author__ = "shinjawkwang@naver.com"
 
 import glob
 import cv2
+import numpy as np
 
 
 # (세로 길이, 칸 사이 거리, 칸 수)로 구성된 list를 return
@@ -110,6 +111,35 @@ def ResizeImage(files, matrix, maxCol, maxRow, target_dir):
         i += 1
 
 
+# 시간표 이미지에서 "월화수목금" 부분을 삭제한다.
+# 이 부분이 있으면 병합할 때 row level을 맞춰도 조금씩 어긋난다.
+def deleteMax(files, target_dir):
+    i = 0
+    sv = []
+    for file in files:
+        img = cv2.imread(file, cv2.IMREAD_GRAYSCALE)
+        height = 0
+        j = 0
+        while True:
+            px = img[height, 0]
+
+            if px<255:
+                print("save ", px, " into", j)
+                sv.append(px)
+
+                if j>0:
+                    if sv[j] - sv[j-1] > 20:
+                        delImg = img[height:img.shape[0], 0:img.shape[1]]
+                        cv2.imwrite(target_dir + '/Resize/' + str(i) + '_rs.jpg', delImg)
+                        break
+                j += 1
+
+            height += 1
+
+        i += 1
+        sv.clear()
+
+
 # 이미지를 병합하는 코드
 # opencv의 add함수를 이용한다
 # 사이즈 이슈가 있는 듯 하다
@@ -141,9 +171,33 @@ def main():
     maxRow = 0
     for i in range(len(matrix)):
         maxRow = max(maxRow, matrix[i][1])
+        deleteMax(files, target_dir)
     ResizeImage(files, matrix, maxCol, maxRow, target_dir)
     rs_files = glob.glob(target_dir + '/Resize/' + '*.jpg')
+    '''
+    img1 = cv2.imread(target_dir + '/Resize/0_rs.jpg')
+    img2 = cv2.imread(target_dir + '/Resize/1_rs.jpg')
 
+    def nothing(x):
+        pass
+
+    cv2.namedWindow('image')
+    cv2.createTrackbar('W', 'image', 0, 100, nothing)
+
+    while True:
+
+        w = cv2.getTrackbarPos('W', 'image')
+
+        dst = cv2.addWeighted(img1, float(100 - w) * 0.01, img2, float(w) * 0.01, 0)
+
+        cv2.imshow('dst', dst)
+
+        if cv2.waitKey(1) & 0xFF == 27:
+            break;
+
+    cv2.destroyAllWindows()
+    '''
+    
 
 if __name__ == "__main__":
     main()

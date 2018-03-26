@@ -128,16 +128,19 @@ def deleteMax(files, target_dir):
                 sv.append(px)
 
                 if j>0:
-                    if sv[j] - sv[j-1] > 20:
-                        delImg = img[height:img.shape[0], 0:img.shape[1]]
+                    if sv[j] - sv[j-1] > 30:
+                        delImg = img[sv[j-1]:img.shape[0], 0:img.shape[1]]
                         cv2.imwrite(target_dir + '/Resize/' + str(i) + '_rs.jpg', delImg)
+                        print(i, "th img save complete")
                         break
                 j += 1
 
             height += 1
 
         i += 1
+        print(sv)
         sv.clear()
+        print(sv)
 
 
 # 이미지를 병합하는 코드

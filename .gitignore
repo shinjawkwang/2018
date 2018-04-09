@@ -12,7 +12,9 @@
 *.pdf
 
 # test, temp Files
+test
 test.c
+test.s
 test.cpp
 test.py
 temp.c

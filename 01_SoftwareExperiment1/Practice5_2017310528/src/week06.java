@@ -28,9 +28,11 @@ public class week06 {
 				}
 				catch(OutOfRangeException e) {
 					System.out.println(e.getMessage());
+					break;
 				}
 				catch(AddZeroException e) {
 					System.out.println(e.getMessage());
+					break;
 				}
 			}
 			else if(cmd==2) {
@@ -43,9 +45,11 @@ public class week06 {
 				}
 				catch(OutOfRangeException e) {
 					System.out.println(e.getMessage());
+					break;
 				}
 				catch(SubtractZeroException e) {
 					System.out.println(e.getMessage());
+					break;
 				}
 			}
 			else if(cmd==3) {
@@ -54,6 +58,7 @@ public class week06 {
 				}
 				catch(OutOfRangeException e) {
 					System.out.println(e.getMessage());
+					break;
 				}
 			}
 			else if(cmd==4) {

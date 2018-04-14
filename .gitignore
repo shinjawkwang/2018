@@ -31,3 +31,6 @@ Icon?
 
 # vscode configuration
 .vscode/
+
+* zipped file
+*.tar

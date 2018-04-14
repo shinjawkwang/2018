@@ -7,26 +7,29 @@
 #define FRAC(sfp)   (((sfp)&0x1FF) + 0x200) // M을 구함
 
 sfp int2sfp(int input){
-    sfp s = 0, frac = 0, expo;
-    int sv = input, cnt = 0, e = 0;
+    sfp s = 0, frac = 0, exp;
+    int sv = input, e = 0;
     /* when input is 0 */
     if (!input) {
         return 0;
     }
     if (input < 0){
         s = 1 << 15;
+        sv = -input;
     }
     while (sv > 1) {
         sv = sv >> 1;
-        cnt ++;
+        e ++;
     }
-    frac += (input << (9 - cnt)) - (1 << 9);
-    expo = (cnt + 31) << 9;
-    return expo + s + frac;
+    if(input > 0)
+        frac += (input << (9 - e)) - (1 << 9);
+    else
+        frac += (-input << (9 - e)) - (1 << 9);
+    exp = (e + 31) << 9;
+    return exp + s + frac;
 }
 
 int sfp2int(sfp input){
-    int test;
     int result;
     int s = 1 - 2 * SIG(input);
     int exp = EXP(input);
@@ -55,7 +58,7 @@ sfp float2sfp(float input){
     unsigned fTemp;
     fTemp = *(unsigned *)&input;
     sfp s, frac = 0, exp, result;
-    int cnt = 0, e = 0, fexp = 0, temp;
+    int e = 0, fexp = 0, temp;
     /* when input is 0 */
     if (!input) {
         return 0;
@@ -199,13 +202,10 @@ sfp sfp_add(sfp a, sfp b){
     }
 }
 
-
 char* sfp2bits(sfp result){
     char *str;
     str = malloc(sizeof(char) * 17);
-    if(!result){
-        str = "+0.0";
-    }
+
     for(int i=0; i<16; i++){
         str[i] = ((result >> (15-i)) & 1) ? '1' : '0';
     }

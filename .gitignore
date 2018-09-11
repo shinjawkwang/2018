@@ -4,6 +4,7 @@
 # c, cpp out file
 *.out
 *.o
+*
 
 # Document Files
 *.docx
@@ -32,5 +33,5 @@ Icon?
 # vscode configuration
 .vscode/
 
-* zipped file
+# zipped file
 *.tar

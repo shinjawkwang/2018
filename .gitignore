@@ -4,7 +4,6 @@
 # c, cpp out file
 *.out
 *.o
-*
 
 # Document Files
 *.docx

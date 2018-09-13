@@ -12,6 +12,14 @@
 *.pptx
 *.pdf
 
+# Media Files
+*.jpg
+*.jpeg
+*.png
+*.gif
+*.MOV
+*.avi
+
 # test, temp Files
 test
 test.c

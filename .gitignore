@@ -37,3 +37,6 @@ Icon?
 
 # zipped file
 *.tar
+
+# log
+log.*

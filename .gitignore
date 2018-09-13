@@ -22,13 +22,8 @@
 
 # test, temp Files
 test
-test.c
-test.s
-test.cpp
-test.py
-temp.c
-temp.cpp
-temp.py
+test.*
+temp.*
 
 # Matlab Drive Appdata
 .MATLABDriveAppData/

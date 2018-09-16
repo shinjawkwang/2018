@@ -40,6 +40,10 @@ int main(int argc, char** argv) {
 		strcpy(fName, argv[1]);
 		strcpy(nName, argv[2]);
 	}
+	if(!strcmp(fName, nName)) {
+		printf("ERROR: File name and new name are same.\n");
+		return 0;
+	}
 
 
 	/* check if file exist, and determine buf_size */

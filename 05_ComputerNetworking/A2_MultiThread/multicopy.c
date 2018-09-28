@@ -78,6 +78,7 @@ void *thread(void *data) {
 		* pos: position of bit, used when reading & writing
 		*/
     sys *fsys = (sys *)data;
+    sys copier = *fsys;
     char buf[1024] = {0x00,};
     int buf_size = 1024;
     int cpy, tar, log_;
@@ -87,7 +88,7 @@ void *thread(void *data) {
 
 
     /* check if file exist, and determine buf_size */
-    if (stat((*fsys).fName, &file_info) < 0) {
+    if (stat(copier.fName, &file_info) < 0) {
         printf("ERROR: File doesn't exist.\n");
         return NULL;
     }
@@ -100,17 +101,17 @@ void *thread(void *data) {
 
     start = clock();
     /* open filestreams */
-    cpy = open((*fsys).fName, O_RDONLY, S_IRWXU | S_IRWXG | S_IRWXO);
-    tar = open((*fsys).nName, O_WRONLY | O_CREAT, S_IRWXU | S_IRWXG | S_IRWXO);
+    cpy = open(copier.fName, O_RDONLY, S_IRWXU | S_IRWXG | S_IRWXO);
+    tar = open(copier.nName, O_WRONLY | O_CREAT, S_IRWXU | S_IRWXG | S_IRWXO);
     log_ = open("log.txt", O_WRONLY | O_CREAT | O_APPEND, S_IRWXU | S_IRWXG | S_IRWXO);
 
 
-    sprintf(tmp, "%6.2lf ", coretime);
+    sprintf(tmp, "%-6.2lf ", coretime);
     write(log_, tmp, strlen(tmp));
     write(log_, "Start copying ", 14);
-    write(log_, (*fsys).fName, strlen((*fsys).fName));
+    write(log_, copier.fName, strlen(copier.fName));
     write(log_, " to ", 4);
-    write(log_, (*fsys).nName, strlen((*fsys).nName));
+    write(log_, copier.nName, strlen(copier.nName));
     write(log_, "\n", 1);
     
 
@@ -122,9 +123,9 @@ void *thread(void *data) {
     }
     end = clock();
     coretime += (double)((end - start) / CLOCKS_PER_SEC);
-    sprintf(tmp, "%6.2lf ", coretime);
+    sprintf(tmp, "%-6.2lf ", coretime);
     write(log_, tmp, strlen(tmp));
-    write(log_, (*fsys).nName, strlen((*fsys).nName));
+    write(log_, copier.nName, strlen(copier.nName));
     write(log_, " is copied completely\n", 22);
 
 

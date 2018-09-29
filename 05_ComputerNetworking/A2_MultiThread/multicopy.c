@@ -60,6 +60,8 @@ int main(int argc, char **argv) {
         coretime += (double)((end - start) / CLOCKS_PER_SEC);
         pthread_create(&threads[cnt], NULL, thread, (void *)fsys);
     }
+
+    free(fsys);
     return 0;
 }
 

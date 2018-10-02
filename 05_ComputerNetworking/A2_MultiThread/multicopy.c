@@ -33,9 +33,9 @@ int main(int argc, char **argv) {
         * fsys: struct contain file name and new name => give parameter to thread
         * threads: threads
         */
-    int cnt = 0;;
+    int cnt = 0;
     sys *fsys = malloc(sizeof(sys));
-    pthread_t threads[200];
+    pthread_t threads;
 
 
     /* Core Loop */
@@ -58,7 +58,7 @@ int main(int argc, char **argv) {
 
         end = clock(); 
         coretime += (double)((end - start) / CLOCKS_PER_SEC);
-        pthread_create(&threads[cnt], NULL, thread, (void *)fsys);
+        pthread_create(&threads, NULL, thread, (void *)fsys);
     }
 
     free(fsys);

@@ -7,8 +7,8 @@
  * September 17, 2018.
  * Computer Network Lab, Sungkyunkwan University
  *
- * Student Id   :
- * Student Name :
+ * Student Id   : 2017310528
+ * Student Name : 신재광
  *
  *-----------------------------------------------------------
  */

@@ -130,18 +130,19 @@ int strcompare(char *a, char *b) {
 	int size_a = strlength(a);
 	int size_b = strlength(b);
 
-	for(int i=0; i<size_a; i++) {
-		if('A'<=a[i] && a[i]<='Z') {
-			a[i] += 32;
-		}
-		if('A'<=b[i] && b[i]<='Z') {
-			b[i] += 32;
-		}
-	}
 	if(size_a != size_b) {
 		return 0;
 	}
 	else {
+		for(int i=0; i<size_a; i++) {
+			if('A'<=a[i] && a[i]<='Z') {
+				a[i] += 32;
+			}
+			if('A'<=b[i] && b[i]<='Z') {
+				b[i] += 32;
+			}
+		}
+	
 		for(int i=0; i<size_a; i++) {
 			if(a[i] != b[i]) {
 				return 0;
@@ -225,6 +226,7 @@ void indexBuilder(const char* inputFileNm, const char* indexFileNm) {
 		name[i] = inputFileNm[i];
 	name[cnt] = '\0';
 	write(ouptfd, name, cnt);
+	write(ouptfd, ":", 1);
 
 
 	while (read(inptfd, buf, 1) > 0) {

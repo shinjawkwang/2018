@@ -35,6 +35,9 @@ Icon?
 # vscode configuration
 .vscode/
 
+# cloned file; not my code
+tjsamples/
+
 # zipped file
 *.tar
 *.zip

@@ -46,5 +46,5 @@ tjsamples/
 # log
 log.*
 
-# pyc
-*.pyc
+# python cache
+__pycache__

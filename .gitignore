@@ -19,6 +19,7 @@
 *.gif
 *.MOV
 *.avi
+*.mp4
 
 # test, temp Files
 test

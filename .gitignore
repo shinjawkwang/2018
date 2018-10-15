@@ -45,3 +45,6 @@ tjsamples/
 
 # log
 log.*
+
+# pyc
+*.pyc

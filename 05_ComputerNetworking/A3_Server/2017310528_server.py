@@ -1,8 +1,10 @@
 from socket import *
+from threading import *
 import os.path
 import sys
 import uuid
 from datetime import datetime, timedelta
+import numpy as np
 
 username = None
 cookieEndTime = None
@@ -21,7 +23,7 @@ def rqParser(req):
     headerDict = {}
     postDict = {}
     headers = req.split('\r\n')
-    print(headers)
+
     method, url, ver = headers[0].split(' ')
     if method == 'GET':
         headers = headers[1:-2]
@@ -85,7 +87,7 @@ def rqHandler(req):
             filename = 'index.html'
         else:
             filename = url[1:]
-            if not os.path.exists(filename):
+            if not os.path.exists(filename) and filename != 'cookie.html':
                 return [None, '404', False, False]
             if isCookie or url=='/favicon.ico':
                 pass
@@ -95,7 +97,7 @@ def rqHandler(req):
 
 
     elif method=='POST':
-        print('#### login process start')
+        print('======== login process start')
         username = postDict['username']
         cookieID = uuid.uuid4()
 
@@ -140,6 +142,7 @@ def rqHandler(req):
 def readNserve(ctype, filename):
     try:
         with open(filename, 'rb') as f:
+        
             content = f.read()
     except FileNotFoundError:
         return [None, '404']
@@ -154,51 +157,50 @@ def main():
         svSock.setsockopt(SOL_SOCKET, SO_REUSEADDR, 1)
         svSock.bind(('', svPort))
         svSock.listen(5)
-        print('#### Server has been ready to accept')
+        print('======== Server has been ready to accept ===========')
         try:
             while True:
-                print('#### waiting for accept')
+                print('======== waiting for accept ========================')
                 clSock, addr = svSock.accept()
-                print('#### Client Port: {0}'.format(addr[1]))
-                print('#### Waiting reciving . . .\n')
-                msg = clSock.recv(1024).decode()
+                print('######## Client Port: {0}'.format(addr[1]))
+                msg = clSock.recv(65535).decode()
                 if not msg:
-                    print('REQUEST ERROR. recv() again.')
+                    print('======== REQUEST ERROR. recv() again ===============')
                     continue
+                print('======== REQUEST ===================================')
                 print(msg)
                 content, ctype, isCookie, setCookie = rqHandler(msg)
 
                 if content:
                     if type(content) == str:
                         content = content.encode()
+                    successMsg += 'Date: {0}\r\n'.format(datetime.now().strftime('%A, %-d %b %Y %H:%M:%S GMT'))
+                    successMsg += 'Accept-Ranges: bytes\r\n'
+                    # successMsg += 'Content-Length: {0}\r\n'.format(len(content))
                     successMsg += 'Keep-Alive: timeout=10, max=100\r\n'
                     successMsg += 'Connection: Keep-Alive\r\n'
                     successMsg += 'Content-Type: {0}\r\n'.format(ctype)
-                    successMsg += 'Date: {0}\r\n'.format(datetime.now().strftime('%A, %-d %b %Y %H:%M:%S GMT'))
                     if not setCookie:
-                        print('no cookie setting')
                         successMsg += '\r\n'
                     clSock.send(successMsg.encode())
+                    print('======== RESPONSE(status and header) ===============')
                     print(successMsg, end='')
                     if not ctype.startswith('image') and not ctype.startswith('video') and not ctype.endswith('pdf'):
-                        if type(content) == str:
-                            test = content
-                        else:
-                            test = content.decode()
-                        print(test)
+                            if type(content) != str:
+                                print(content.decode())
+                            else:
+                                print(content)
                     clSock.send(content)
 
                 else:
                     if ctype == '404':
-                        print('404 ERROR')
                         clSock.send(('HTTP/1.1 404 NOT FOUND\r\n\r\n' + htmlHeader + '<h1 class=\"col l8 offset-l2 s12\">404 NOT FOUND</h1></div></body></html>').encode())
                     elif ctype == '403':
-                        print('403 ERROR')
                         clSock.send(('HTTP/1.1 403 Forbidden\r\n\r\n' + htmlHeader + '<h1 class=\"col l8 offset-l2 s12\">403 Forbidden</h1></div></body></html>').encode())
                 
-                print('\n#### Send Complete. Close Client Socket')
+                print('\n======== Send Complete; Close Client Socket ========')
                 successMsg = 'HTTP/1.1 200 OK\r\n'
-                clSock.close()
+                
         except KeyboardInterrupt:
             print('\nKeyboard Interrupted. End Program.')
 

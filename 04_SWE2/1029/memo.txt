@@ -1,0 +1,2 @@
+echo => "/bin/echo"
+bc => "/usr/bin/bc"

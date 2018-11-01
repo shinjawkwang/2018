@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Computer Networks A3</title>
+        <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
+        <link href="https://fonts.googleapis.com/css?family=Nanum+Gothic" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-rc.2/css/materialize.min.css">
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-rc.2/js/materialize.min.js"></script>
+        <style>
+            body {
+                font-family: 'Nanum Gothic', sans-serif;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <div class="row" style="margin-top:100px;">
+                <div class="col l6 offset-l3 s12">
+                    <h5>Enter your ID and Password</h5>
+                </div>    
+            </div>
+            <div class="row">
+                <div class="col l6 offset-l3 s12">
+                    <form action="." method="POST">
+                        <div class="input-field">
+                            <input type="text" class="autocomplete" name="username" maxlength="254" id="id_username" style="-webkit-box-shadow: 0 0 0 1000px white inset;">
+                            <label for="id_username">ID</label>
+                        </div>
+                        <div class="input-field">
+                            <input type="password" name="password" required="" id="id_password" style="-webkit-box-shadow: 0 0 0 1000px white inset;">
+                            <label for="id_password" class="">Password</label>
+                        </div>
+                        <div class="row">
+                            <div class="form-row right-align">
+                                <button class="waves-effect waves-light blue hoverable btn-small" type="submit">login
+                                    <i class="material-icons right">send</i>
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>

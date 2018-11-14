@@ -11,6 +11,8 @@ recvAddr = (ipAddr, 10080)
 wSize = 0
 timeout = float(0)
 threadLock = Lock()
+senders = []
+mainThreads = []
 #========================#
 
 class UDPSender(object):
@@ -24,27 +26,28 @@ class UDPSender(object):
         self.pList = []
         self.packets = 0
         self.dropped = False
-        self.sending = 0
+        self.inFlight = 0
         self.timer = []
         self.logF = open(filename + '_sending_log.txt', 'w')
         UDPSender.senderNum += 1
     
     def __del__(self):
         UDPSender.senderNum -= 1
-        self.logF.close()
         self.sock.close()
 
     def sendNRecv(self):
         self.readNDevide()
         start_time = time()
-        sendt = Thread(target=self.sendPacket, args=(start_time))
-        recvt = Thread(target=self.recvACK, args=[])
+        sendt = Thread(target=self.sendPacket, args=[start_time])
+        recvt = Thread(target=self.recvACK, args=[start_time])
 
         sendt.start()
         recvt.start()
 
         sendt.join()
         recvt.join()
+        print(filename, 'close')
+        self.logF.close()
         
     def readNDevide(self):
         try:
@@ -62,6 +65,7 @@ class UDPSender(object):
                     #       ackPos = pkt.find(b'ACK\n')
                     self.pList.append(pkt)
                     self.packets += 1
+                self.timer = [None] * self.packets
 
         except Exception as e:
             print(e)
@@ -73,16 +77,19 @@ class UDPSender(object):
             if self.dropped:
                 continue
 
-            if self.sending < wSize:
+            if self.inFlight < wSize:
+                # self.sock.sendto(self.packets[pkIdx], recvAddr)
                 self.timer[pkIdx] = time() - start_time
-                self.sock.sendto(self.packets[pkIdx], recvAddr)
+                self.logF.write('%.3f pkt: %d | sent\n' % (self.timer[pkIdx], pkIdx))
                 pkIdx += 1
 
                 with threadLock:
-                    self.sending += 1
-        
+                    self.inFlight += 1
 
-    def recvACK(self):
+                if pkIdx == self.packets:
+                    return
+        
+    def recvACK(self, start_time):
         prevACK = -1
         dupCnt = 0
         while True:
@@ -90,25 +97,40 @@ class UDPSender(object):
                 # recvAddr isn't useful at here.
                 ack, _ = self.sock.recv()
                 ack = int(ack.decode())
-
+                self.logF.write('%.3f ACK: %d | sent\n' % (time()-start_time, ack))
                 if prevACK == ack:
                     dupCnt += 1
                 else:
                     dupCnt = 0
                 prevACK = ack
 
+                with threadLock:
+                    self.inFlight -= 1
+
                 # For fast transmission
                 if dupCnt == 3:
-                    self.dropped = True
+                    with threadLock:
+                        self.dropped = True
+                        self.sock.sendto(self.packets[ack], recvAddr)
+                        self.timer[ack] = time() - start_time
+                        self.logF.write('%.3f pkt: %d | 3 duplicated ACKs\n' % (self.timer[ack], ack))
 
-                
+                if ack == self.packets:
+                    self.sock.sendto(b'END', recvAddr)
+                    end_time = time() - start_time
+                    self.logF.write('\nFile transfer is finished.\n')
+                    self.logF.write('Throughput: %.2f pkts / sec\n' % (self.packets/end_time))
+                    return
+
             except Exception as e:
                 print(e)
 
 
 def senderMainThread(filename):
+    global senders
     sender = UDPSender(filename)
-    print('>>> sender #%d created' % (UDPSender.senderNum))
+    senders.append(sender)
+    # print('>>> sender #%d created' % (UDPSender.senderNum))
     sender.sendNRecv()
 
 #===============================   main   ===============================#
@@ -126,10 +148,15 @@ if __name__ == '__main__':
                 print('ERROR: FILE DOES NOT EXIST. INPUT AGAIN.')
                 continue
             else:
-                Thread(target=senderMainThread, args=[filename]).start()
+                t = Thread(target=senderMainThread, args=[filename])
+                mainThreads.append(t)
+                t.start()
 
     except KeyboardInterrupt:
         print('\nKeyboard Interrupted. Close Sender.')
-        # server.sock.close()
+        for t in mainThreads:
+            t.join()
+        for sender in senders:
+            del sender
         sys.exit()
 #========================================================================#

@@ -6,8 +6,7 @@ from threading import *
 from time import *
 
 #=== global variables ===#
-ipAddr = None
-recvAddr = (ipAddr, 10080)
+recvAddr = ('', 10080)
 wSize = 0
 timeout = float(0)
 threadLock = Lock()
@@ -36,6 +35,9 @@ class UDPSender(object):
         self.sock.close()
 
     def sendNRecv(self):
+        #============== send filename first ==============#
+        self.sock.sendto(self.filename.encode(), recvAddr)
+        #=================================================#
         self.readNDevide()
         start_time = time()
         sendt = Thread(target=self.sendPacket, args=[start_time])
@@ -57,12 +59,11 @@ class UDPSender(object):
                     pkt = f.read(1400)
                     if not pkt:
                         break
-                    pkt = (bytearray((str(self.packets) + 'SEQ\n' + str(self.packets+1) + 'ACK\n').encode())
+                    pkt = (bytearray((str(self.packets) + '\r\n\n').encode())
                         + bytearray(pkt))
 
                     # can find keyword in bytearray at reciever like this:
-                    #       seqPos = pkt.find(b'SEQ\n')
-                    #       ackPos = pkt.find(b'ACK\n')
+                    #       seqPos = pkt.find(b'\r\n\n')
                     self.pList.append(pkt)
                     self.packets += 1
                 self.timer = [None] * self.packets
@@ -78,7 +79,7 @@ class UDPSender(object):
                 continue
 
             if self.inFlight < wSize:
-                # self.sock.sendto(self.packets[pkIdx], recvAddr)
+                self.sock.sendto(self.pList[pkIdx], recvAddr)
                 self.timer[pkIdx] = time() - start_time
                 self.logF.write('%.3f pkt: %d | sent\n' % (self.timer[pkIdx], pkIdx))
                 pkIdx += 1
@@ -95,7 +96,7 @@ class UDPSender(object):
         while True:
             try:
                 # recvAddr isn't useful at here.
-                ack, _ = self.sock.recv()
+                ack, _ = self.sock.recv(65535)
                 ack = int(ack.decode())
                 self.logF.write('%.3f ACK: %d | sent\n' % (time()-start_time, ack))
                 if prevACK == ack:
@@ -116,7 +117,7 @@ class UDPSender(object):
                         self.logF.write('%.3f pkt: %d | 3 duplicated ACKs\n' % (self.timer[ack], ack))
 
                 if ack == self.packets:
-                    self.sock.sendto(b'END', recvAddr)
+                    self.sock.sendto(b'-1\r\n\n', recvAddr)
                     end_time = time() - start_time
                     self.logF.write('\nFile transfer is finished.\n')
                     self.logF.write('Throughput: %.2f pkts / sec\n' % (self.packets/end_time))
@@ -139,6 +140,7 @@ if __name__ == '__main__':
     wSize = int(input('window size: '))
     timeout = float(input('timeout (sec): '))
     recvAddr = (ipAddr, 10080)
+    print(recvAddr)
 
     try:
         print('======== Starting Sender. <Ctrl + C> to stop. ========')

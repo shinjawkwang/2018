@@ -1,4 +1,0 @@
-0.022 pkt: 0 | sent
-0.022 pkt: 1 | sent
-0.022 pkt: 2 | sent
-0.022 pkt: 3 | sent

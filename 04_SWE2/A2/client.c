@@ -57,6 +57,9 @@ int main(int argc, char *argv[]) {
                 buf[i] = 0x00;
             }
         }
+        for(int i=0; i<MAXLINE; i++) {
+                buf[i] = 0x00;
+            }
     }
     close(cfd);
 }

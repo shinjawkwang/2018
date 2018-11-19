@@ -49,7 +49,9 @@ int main(int argc, char *argv[]) {
 		hostname = inet_ntoa(*(struct in_addr *)&caddr.sin_addr);
 		printf("\nConnected: %s\n", hostname); 
         while((n = read(connfd, buf, MAXLINE)) > 0) {
-            printf("search: %s\n", buf);
+			write(1, "search: ", 8);
+			write(1, buf, n);
+			printf("\n");
 			searchNSend(buf, connfd);
 			for(int i=0; i<MAXLINE; i++) {
 				buf[i] = 0x00;
